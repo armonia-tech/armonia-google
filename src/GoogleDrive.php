@@ -374,7 +374,7 @@ class GoogleDrive
      */
     public static function deleteFileByFileId(string $fileId)
     {
-        $client = $this->connect();
+        $client = self::connect();
         $service = new Google_Service_Drive($client);
 
         $service->files->delete($fileId);
