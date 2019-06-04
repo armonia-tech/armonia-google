@@ -30,7 +30,7 @@ class CloudStorage
      * @author Armonia Tech <developer@armonia-tech.com>
      * @return string cloud storage key
      */
-    private function getStorageKey()
+    private static function getStorageKey()
     {
         return self::$config['storage_key'];
     }
@@ -41,7 +41,7 @@ class CloudStorage
      * @author Armonia Tech <developer@armonia-tech.com>
      * @return string cloud storage bucket
      */
-    private function getStorageBucket()
+    private static function getStorageBucket()
     {
         return self::$config['storage_bucket'];
     }
@@ -57,10 +57,10 @@ class CloudStorage
     public static function saveToCloud($content, string $file_path)
     {
         $storage = new StorageClient([
-            'keyFile' => json_decode(file_get_contents(APP_PATH . '/' . $this->getStorageKey()), true)
+            'keyFile' => json_decode(file_get_contents(APP_PATH . '/' . self::getStorageKey()), true)
         ]);
 
-        $bucket = $storage->bucket($this->getStorageBucket());
+        $bucket = $storage->bucket(self::getStorageBucket());
 
         $filename = $file_path;
         $bucket->upload($content, [
@@ -81,10 +81,10 @@ class CloudStorage
     public static function uploadToCloud($file, string $file_directory = '')
     {
         $storage = new StorageClient([
-            'keyFile' => json_decode(file_get_contents(APP_PATH . '/' . $this->getStorageKey()), true)
+            'keyFile' => json_decode(file_get_contents(APP_PATH . '/' . self::getStorageKey()), true)
         ]);
 
-        $bucket = $storage->bucket($this->getStorageBucket());
+        $bucket = $storage->bucket(self::getStorageBucket());
 
         $filename = (!empty($file_directory)) ? $file_directory . '/' . basename($file) : basename($file);
         $bucket->upload(fopen($file, 'r'), [

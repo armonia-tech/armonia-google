@@ -34,7 +34,7 @@ class GoogleDrive
      * @author Armonia Tech <developer@armonia-tech.com>
      * @return string app_name
      */
-    private function getGoogleAppName()
+    private static function getGoogleAppName()
     {
         return self::$config['app_name'];
     }
@@ -45,7 +45,7 @@ class GoogleDrive
      * @author Armonia Tech <developer@armonia-tech.com>
      * @return string credential file path
      */
-    private function getGoogleCredential()
+    private static function getGoogleCredential()
     {
         return self::$config['credential'];
     }
@@ -56,7 +56,7 @@ class GoogleDrive
      * @author Armonia Tech <developer@armonia-tech.com>
      * @return string token file path
      */
-    private function getGoogleToken()
+    private static function getGoogleToken()
     {
         return self::$config['token'];
     }
@@ -67,12 +67,12 @@ class GoogleDrive
      * @author Armonia Tech <developer@armonia-tech.com>
      * @return object $client
      */
-    private function connect()
+    private static function connect()
     {
         $client = new Google_Client();
-        $client->setApplicationName($this->getGoogleAppName());
+        $client->setApplicationName(self::getGoogleAppName());
         $client->setScopes(Google_Service_Drive::DRIVE);
-        $client->setAuthConfig($this->getGoogleCredential());
+        $client->setAuthConfig(self::getGoogleCredential());
         $client->setAccessType('offline');
         $client->setPrompt('select_account consent');
 
@@ -80,7 +80,7 @@ class GoogleDrive
         // The file token.json stores the user's access and refresh tokens, and is
         // created automatically when the authorization flow completes for the first
         // time.
-        $tokenPath = $this->getGoogleToken();
+        $tokenPath = self::getGoogleToken();
         if (file_exists($tokenPath)) {
             $accessToken = json_decode(file_get_contents($tokenPath), true);
             $client->setAccessToken($accessToken);
@@ -128,7 +128,7 @@ class GoogleDrive
     public static function getFolderIdByName(string $name, string $parentFolderId = '')
     {
         // Get the API client and construct the service object.
-        $client = $this->connect();
+        $client = self::connect();
         $service = new Google_Service_Drive($client);
         $searchInFolder = '';
 
@@ -171,7 +171,7 @@ class GoogleDrive
     public static function getFolderIdByCustomProperty(string $name, string $value, string $parentFolderId = '')
     {
         // Get the API client and construct the service object.
-        $client = $this->connect();
+        $client = self::connect();
         $service = new Google_Service_Drive($client);
         $searchInFolder = '';
         if (!empty($parentFolderId)) {
@@ -212,7 +212,7 @@ class GoogleDrive
     public static function getFileByFolderId(string $folderId, string $mimeType = '')
     {
         // Get the API client and construct the service object.
-        $client = $this->connect();
+        $client = self::connect();
         $service = new Google_Service_Drive($client);
 
         $mime_filter = (!empty($mimeType)) ? "mimeType = '".$mimeType."' and " : "";
@@ -250,7 +250,7 @@ class GoogleDrive
     public static function getFileByName(string $name, string $optional_query = '')
     {
         // Get the API client and construct the service object.
-        $client = $this->connect();
+        $client = self::connect();
         $service = new Google_Service_Drive($client);
 
         $optional_query = (!empty($optional_query)) ? " and ".$optional_query : "";
@@ -288,7 +288,7 @@ class GoogleDrive
      */
     public static function createFolder(string $name, string $parentFolderId = '', array $metadata = [])
     {
-        $client = $this->connect();
+        $client = self::connect();
         $service = new Google_Service_Drive($client);
 
         $setting = [];
@@ -321,7 +321,7 @@ class GoogleDrive
      */
     public static function updateFolderName(string $name, string $folderId, array $metadata = [])
     {
-        $client = $this->connect();
+        $client = self::connect();
         $service = new Google_Service_Drive($client);
 
         $setting = [];
@@ -349,7 +349,7 @@ class GoogleDrive
      */
     public static function moveFileByFileId(string $fileId, string $destinationFolderId)
     {
-        $client = $this->connect();
+        $client = self::connect();
         $service = new Google_Service_Drive($client);
 
         $emptyFileMetadata = new Google_Service_Drive_DriveFile();
@@ -391,7 +391,7 @@ class GoogleDrive
      */
     public static function downloadFileByFileId(string $fileId)
     {
-        $client = $this->connect();
+        $client = self::connect();
         $service = new Google_Service_Drive($client);
 
         $response = $service->files->get($fileId, array('alt' => 'media'));
