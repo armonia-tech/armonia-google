@@ -1,0 +1,28 @@
+{
+    "name": "armonia-tech/armonia-google",
+    "description": "SDK for google apis",
+    "keywords": ["armonia", "armonia tech", "google api"],
+    "homepage": "https://github.com/armonia-tech/armonia-google.git",
+    "license": "BSD-3-Clause", 
+    "config": {
+        "vendor-dir": "vendors",
+        "optimize-autoloader": true
+    },
+    "autoload": {
+        "psr-4": { "ArmoniaGoogle\\": "src/" }
+    },
+    "authors": [
+        {
+            "name": "Armonia Tech",
+            "email": "developer@armonia-tech.com"
+        }
+    ],
+    "require": {
+        "google/apiclient": "^2.0",
+        "google/cloud-storage": "^1.11"
+    },
+    "minimum-stability": "stable",
+    "require-dev": {
+        "phpunit/phpunit": "^8.1"
+    }
+}
