@@ -278,6 +278,43 @@ class GoogleDrive
     }
 
     /**
+     * get google drive file id by custom query
+     *
+     * @author Armonia Tech <developer@armonia-tech.com>
+     * @param string optional $optional_query
+     * @return array $output folder id and name
+     */
+    public static function getFileByCustomQuery(string $custom_query)
+    {
+        // Get the API client and construct the service object.
+        $client = self::connect();
+        $service = new Google_Service_Drive($client);
+
+        $custom_query = (!empty($custom_query)) ? " and ".$custom_query : "";
+        // Print the names and IDs for up to 10 files.
+        $optParams = array(
+            'q' => "trashed = false ".$custom_query,
+            'pageSize' => 10,
+            'spaces' => 'drive',
+            'fields' => 'nextPageToken, files(id, name)'
+        );
+        $results = $service->files->listFiles($optParams);
+
+        if (count($results->getFiles()) > 0) {
+            $output = [];
+            foreach ($results->getFiles() as $file) {
+                $temp = [];
+                $temp['name'] = $file->getName();
+                $temp['id'] = $file->getId();
+                $output[] = $temp;
+            }
+        } else {
+            $output = false;
+        }
+        return $output;
+    }
+
+    /**
      * create google drive folder
      *
      * @author Armonia Tech <developer@armonia-tech.com>
