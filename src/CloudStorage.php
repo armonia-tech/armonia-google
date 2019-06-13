@@ -57,7 +57,7 @@ class CloudStorage
     public static function saveToCloud($content, string $file_path)
     {
         $storage = new StorageClient([
-            'keyFile' => json_decode(file_get_contents(APP_PATH . '/' . self::getStorageKey()), true)
+            'keyFile' => json_decode(file_get_contents(self::getStorageKey()), true)
         ]);
 
         $bucket = $storage->bucket(self::getStorageBucket());
@@ -73,7 +73,7 @@ class CloudStorage
     /**
      * Upload File to Cloud Storage
      *
-     * @author Wilson <huanyong.chan@armonia-tech.com>
+     * @author Armonia Tech <developer@armonia-tech.com>
      * @param object $file
      * @param string $file_directory cloud directory where the file upload to
      * @return bool false
@@ -81,7 +81,7 @@ class CloudStorage
     public static function uploadToCloud($file, string $file_directory = '')
     {
         $storage = new StorageClient([
-            'keyFile' => json_decode(file_get_contents(APP_PATH . '/' . self::getStorageKey()), true)
+            'keyFile' => json_decode(file_get_contents(self::getStorageKey()), true)
         ]);
 
         $bucket = $storage->bucket(self::getStorageBucket());
@@ -90,6 +90,68 @@ class CloudStorage
         $bucket->upload(fopen($file, 'r'), [
             'name' => $filename,
         ]);
+
+        return true;
+    }
+
+    /**
+     * get URL to Cloud Storage
+     *
+     * @author Armonia Tech <developer@armonia-tech.com>
+     * @param string $file_url file path in the bucket exclude the bucket name
+     * @return string url
+     */
+    public static function urlFromCloud(string $file_url, string $expires = '+1 hours')
+    {
+        $storage = new StorageClient([
+            'keyFile' => json_decode(file_get_contents(self::getStorageKey()), true)
+        ]);
+
+        $bucket = $storage->bucket(self::getStorageBucket());
+        $object = $bucket->object($file_url);
+        $url = $object->signedUrl(new \DateTime($expires));
+
+        return $url;
+    }
+    
+    /**
+     * read file from Cloud Storage
+     *
+     * @author Armonia Tech <developer@armonia-tech.com>
+     * @param string $file_url file path in the bucket exclude the bucket name
+     * @return object $contents
+     */
+    public static function readFromCloud(string $file_url)
+    {
+        $storage = new StorageClient([
+            'keyFile' => json_decode(file_get_contents(self::getStorageKey()), true)
+        ]);
+
+        $bucket = $storage->bucket(self::getStorageBucket());
+        $object = $bucket->object($file_url);
+        $stream = $object->downloadAsStream();
+        $contents = $stream->getContents();
+
+        return $contents;
+    }
+
+    /**
+     * download file from Cloud Storage
+     *
+     * @author Armonia Tech <developer@armonia-tech.com>
+     * @param string $file_url file path in the bucket exclude the bucket name
+     * @param string $file_directory local directory where the file save to
+     * @return bool true
+     */
+    public static function downloadFromCloud(string $file_url, string $local_path)
+    {
+        $storage = new StorageClient([
+            'keyFile' => json_decode(file_get_contents(self::getStorageKey()), true)
+        ]);
+
+        $bucket = $storage->bucket(self::getStorageBucket());
+        $object = $bucket->object($file_url);
+        $object->downloadToFile($local_path);
 
         return true;
     }
