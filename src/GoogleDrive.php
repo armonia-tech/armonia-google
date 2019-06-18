@@ -278,11 +278,27 @@ class GoogleDrive
     }
 
     /**
+     * get google drive file details by id
+     *
+     * @author Armonia Tech <developer@armonia-tech.com>
+     * @param string $file_id
+     * @return mixed $file boolean/array
+     */
+    public static function getFileById(string $file_id)
+    {
+        // Get the API client and construct the service object.
+        $client = self::connect();
+        $service = new Google_Service_Drive($client);
+        $file = $service->files->get($file_id);
+        return $file;
+    }
+
+    /**
      * get google drive file id by custom query
      *
      * @author Armonia Tech <developer@armonia-tech.com>
-     * @param string optional $optional_query
-     * @return array $output folder id and name
+     * @param string $custom_query
+     * @return array $output file id and name
      */
     public static function getFileByCustomQuery(string $custom_query)
     {
