@@ -19,7 +19,8 @@
     ],
     "require": {
         "google/apiclient": "^2.0",
-        "google/cloud-storage": "^1.11"
+        "google/cloud-storage": "^1.11",
+        "google/cloud-pubsub": "^1.13"
     },
     "minimum-stability": "stable",
     "require-dev": {
