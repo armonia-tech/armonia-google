@@ -47,6 +47,26 @@ class CloudStorage
     }
 
     /**
+     * Create Folder to Cloud Storage
+     *
+     * @author Armonia Tech <developer@armonia-tech.com>
+     * @param string $folderName cloud directory that will be created
+     * @return object StorageObject
+     */
+    public static function createFolderToCloud(string $folderName)
+    {
+        $storage = new StorageClient([
+            'keyFile' => json_decode(file_get_contents(self::getStorageKey()), true)
+        ]);
+
+        $bucket = $storage->bucket(self::getStorageBucket());
+
+        return $bucket->upload("", [
+            'name' => $folderName,
+        ]);
+    }
+
+    /**
      * Save Content to Cloud Storage
      *
      * @author Armonia Tech <developer@armonia-tech.com>
@@ -63,11 +83,10 @@ class CloudStorage
         $bucket = $storage->bucket(self::getStorageBucket());
 
         $filename = $file_path;
-        $bucket->upload($content, [
+        
+        return $bucket->upload($content, [
             'name' => $filename,
         ]);
-
-        return true;
     }
 
     /**
