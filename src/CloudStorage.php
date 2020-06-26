@@ -5,6 +5,7 @@ use Google\Cloud\Storage\StorageClient;
 
 class CloudStorage
 {
+    const GOOGLE_STORAGE_URL = 'https://storage.googleapis.com/';
     /**
      * @var array $config
      */
@@ -125,12 +126,23 @@ class CloudStorage
         $storage = new StorageClient([
             'keyFile' => json_decode(file_get_contents(self::getStorageKey()), true)
         ]);
-
         $bucket = $storage->bucket(self::getStorageBucket());
         $object = $bucket->object($file_url);
         $url = $object->signedUrl(new \DateTime($expires));
 
         return $url;
+    }
+
+    /**
+     * get public URL to Cloud Storage
+     *
+     * @author Armonia Tech <developer@armonia-tech.com>
+     * @param string $file_url file path in the bucket exclude the bucket name
+     * @return string url
+     */
+    public static function publicUrlFromCloud(string $file_url)
+    {
+        return self::GOOGLE_STORAGE_URL.self::getStorageBucket().'/'.$file_url;
     }
     
     /**
