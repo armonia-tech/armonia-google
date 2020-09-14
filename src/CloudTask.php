@@ -14,6 +14,7 @@ class CloudTask
         string $queue,
         string $APIurl,
         string $httpMethod,
+        array  $headers = [],
         array  $payload = []
     ) {
         try {
@@ -42,6 +43,10 @@ class CloudTask
             }
 
             $httpRequest->setHttpMethod($httpMethod);
+            
+            if (! empty($headers)) {
+                $httpRequest->setHeaders($headers);
+            }
 
             if (! empty($payload)) {
                 $httpRequest->setBody(json_encode($payload));
