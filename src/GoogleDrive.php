@@ -123,9 +123,10 @@ class GoogleDrive
      * @author Armonia Tech <developer@armonia-tech.com>
      * @param string $name
      * @param string $parentFolderId
+     * @param int optional $pageSize
      * @return array $output folder id and name
      */
-    public static function getFolderIdByName(string $name, string $parentFolderId = '')
+    public static function getFolderIdByName(string $name, string $parentFolderId = '', int $pageSize = 10)
     {
         // Get the API client and construct the service object.
         $client = self::connect();
@@ -136,10 +137,10 @@ class GoogleDrive
             $searchInFolder = " and '".$parentFolderId."' in parents";
         }
 
-        // Print the names and IDs for up to 10 files.
+        // Print the names and IDs for up to $pageSize files.
         $optParams = array(
             'q' => "trashed = false and mimeType = 'application/vnd.google-apps.folder' and name = '".$name."'".$searchInFolder,
-            'pageSize' => 10,
+            'pageSize' => $pageSize,
             'spaces' => 'drive',
             'fields' => 'nextPageToken, files(id, name)'
         );
@@ -166,9 +167,10 @@ class GoogleDrive
      * @author Armonia Tech <developer@armonia-tech.com>
      * @param string $name
      * @param string $parentFolderId
+     * @param int optional $pageSize
      * @return array $output folder id and name
      */
-    public static function getFolderIdByCustomProperty(string $name, string $value, string $parentFolderId = '')
+    public static function getFolderIdByCustomProperty(string $name, string $value, string $parentFolderId = '', int $pageSize = 100)
     {
         // Get the API client and construct the service object.
         $client = self::connect();
@@ -178,10 +180,10 @@ class GoogleDrive
             $searchInFolder = " and '".$parentFolderId."' in parents";
         }
 
-        // Print the names and IDs for up to 10 files.
+        // Print the names and IDs for up to $pageSize files.
         $optParams = array(
             'q' => "trashed = false and mimeType = 'application/vnd.google-apps.folder' and appProperties has { key='".$name."' and value='".$value."' }".$searchInFolder,
-            'pageSize' => 100,
+            'pageSize' => $pageSize,
             'spaces' => 'drive',
             'fields' => 'nextPageToken, files(id, name)'
         );
@@ -207,19 +209,20 @@ class GoogleDrive
      * @author Armonia Tech <developer@armonia-tech.com>
      * @param string $folderId
      * @param string optional $mimeType
+     * @param int optional $pageSize
      * @return array $output folder id and name
      */
-    public static function getFileByFolderId(string $folderId, string $mimeType = '')
+    public static function getFileByFolderId(string $folderId, string $mimeType = '', int $pageSize = 10)
     {
         // Get the API client and construct the service object.
         $client = self::connect();
         $service = new Google_Service_Drive($client);
 
         $mime_filter = (!empty($mimeType)) ? "mimeType = '".$mimeType."' and " : "";
-        // Print the names and IDs for up to 10 files.
+        // Print the names and IDs for up to $pageSize files.
         $optParams = array(
             'q' => "trashed = false and ".$mime_filter."'".$folderId."' in parents",
-            'pageSize' => 10,
+            'pageSize' => $pageSize,
             'spaces' => 'drive',
             'fields' => 'nextPageToken, files(id, name)'
         );
@@ -245,19 +248,20 @@ class GoogleDrive
      * @author Armonia Tech <developer@armonia-tech.com>
      * @param string $folderId
      * @param string optional $optional_query
+     * @param int optional $pageSize
      * @return array $output folder id and name
      */
-    public static function getFileByName(string $name, string $optional_query = '')
+    public static function getFileByName(string $name, string $optional_query = '', int $pageSize = 10)
     {
         // Get the API client and construct the service object.
         $client = self::connect();
         $service = new Google_Service_Drive($client);
 
         $optional_query = (!empty($optional_query)) ? " and ".$optional_query : "";
-        // Print the names and IDs for up to 10 files.
+        // Print the names and IDs for up to $pageSize files.
         $optParams = array(
             'q' => "trashed = false and name = '".$name."'".$optional_query,
-            'pageSize' => 10,
+            'pageSize' => $pageSize,
             'spaces' => 'drive',
             'fields' => 'nextPageToken, files(id, name)'
         );
@@ -298,19 +302,20 @@ class GoogleDrive
      *
      * @author Armonia Tech <developer@armonia-tech.com>
      * @param string $custom_query
+     * @param int optional $pageSize
      * @return array $output file id and name
      */
-    public static function getFileByCustomQuery(string $custom_query)
+    public static function getFileByCustomQuery(string $custom_query, int $pageSize = 10)
     {
         // Get the API client and construct the service object.
         $client = self::connect();
         $service = new Google_Service_Drive($client);
 
         $custom_query = (!empty($custom_query)) ? " and ".$custom_query : "";
-        // Print the names and IDs for up to 10 files.
+        // Print the names and IDs for up to $pageSize files.
         $optParams = array(
             'q' => "trashed = false ".$custom_query,
-            'pageSize' => 10,
+            'pageSize' => $pageSize,
             'spaces' => 'drive',
             'fields' => 'nextPageToken, files(id, name)'
         );
