@@ -96,17 +96,18 @@ class CloudStorage
      * @author Armonia Tech <developer@armonia-tech.com>
      * @param object $file
      * @param string $file_directory cloud directory where the file upload to
+     * @param string $filename custom filename
      * @return bool false
      */
-    public static function uploadToCloud($file, string $file_directory = '')
+    public static function uploadToCloud($file, string $file_directory = '', string $filename = '')
     {
         $storage = new StorageClient([
             'keyFile' => json_decode(file_get_contents(self::getStorageKey()), true)
         ]);
 
         $bucket = $storage->bucket(self::getStorageBucket());
-
-        $filename = (!empty($file_directory)) ? $file_directory . '/' . basename($file) : basename($file);
+        $basename = !empty($filename) ? $filename : basename($file);
+        $filename = (!empty($file_directory)) ? rtrim($file_directory, '/\\') . '/' . $basename : $basename;
         $bucket->upload(fopen($file, 'r'), [
             'name' => $filename,
         ]);
