@@ -156,7 +156,7 @@ class GoogleDrive
                 $output[] = $temp;
             }
         } else {
-            $output = false;
+            $output = [];
         }
         return $output;
     }
@@ -198,7 +198,7 @@ class GoogleDrive
                 $output[] = $temp;
             }
         } else {
-            $output = false;
+            $output = [];
         }
         return $output;
     }
@@ -237,7 +237,7 @@ class GoogleDrive
                 $output[] = $temp;
             }
         } else {
-            $output = false;
+            $output = [];
         }
         return $output;
     }
@@ -276,7 +276,7 @@ class GoogleDrive
                 $output[] = $temp;
             }
         } else {
-            $output = false;
+            $output = [];
         }
         return $output;
     }
@@ -330,7 +330,7 @@ class GoogleDrive
                 $output[] = $temp;
             }
         } else {
-            $output = false;
+            $output = [];
         }
         return $output;
     }
