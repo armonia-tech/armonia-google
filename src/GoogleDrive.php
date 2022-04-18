@@ -156,7 +156,7 @@ class GoogleDrive
                 $output[] = $temp;
             }
         } else {
-            $output = [];
+            $output = false;
         }
         return $output;
     }
