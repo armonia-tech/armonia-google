@@ -356,7 +356,7 @@ class GoogleDrive
         if (!empty($metadata)) {
             $setting['appProperties'] = array($metadata);
         }
-        
+
         if (!empty($parentFolderId)) {
             $setting['parents'] = array($parentFolderId);
         }
@@ -364,7 +364,7 @@ class GoogleDrive
         $fileMetadata = new Google_Service_Drive_DriveFile($setting);
 
         $file = $service->files->create($fileMetadata, array('fields' => 'id'));
-        
+
         return (!empty($file)) ? $file->id : false;
     }
 
@@ -393,7 +393,52 @@ class GoogleDrive
         $fileMetadata = new Google_Service_Drive_DriveFile($setting);
 
         $file = $service->files->update($folderId, $fileMetadata, array('fields' => 'id'));
-        
+
+        return (!empty($file)) ? $file->id : false;
+    }
+
+    /**
+     * Create (Upload) file to google drive
+     *
+     * @author Armonia Tech <developer@armonia-tech.com>
+     * @param string $sourceFilePath Full path of the file to be create/upload
+     * @param string $fileName Filename displayed in the google
+     * @param string $destinationFolderId Destination Folder Id
+     * @param string $fileDescription Description Metadata shown in Google Drive UI
+     * @return mixed boolean or int file id
+     */
+    public static function createFile(string $sourceFilePath, string $fileName, string $destinationFolderId, string $fileDescription = '')
+    {
+        $client = self::connect();
+        $service = new Google_Service_Drive($client);
+
+        $fileData = file_get_contents($sourceFilePath);
+        $fileType = mime_content_type($sourceFilePath);
+
+        $googleDriveFile = new Google_Service_Drive_DriveFile();
+        $googleDriveFile->setName($fileName);
+
+        // Parents expect array due to legacy support on multiple folderId
+        // But it is not supported now so we should always set to single element array
+        // https://developers.google.com/drive/api/guides/ref-single-parent
+        $googleDriveFile->setParents([$destinationFolderId]);
+
+        if (!empty($fileDescription)) {
+            $googleDriveFile->setDescription($fileDescription);
+        }
+
+        // Simple upload (updateType = media)
+        https://developers.google.com/drive/api/guides/manage-uploads#simple
+        $file = $service->files->create(
+          $googleDriveFile,
+          array(
+            'data' => $fileData,
+            'mimeType' => $fileType,
+            'uploadType' => 'media',
+            'fields' => 'id'
+          )
+        );
+
         return (!empty($file)) ? $file->id : false;
     }
 
@@ -453,7 +498,7 @@ class GoogleDrive
         $service = new Google_Service_Drive($client);
 
         $response = $service->files->get($fileId, array('alt' => 'media'));
-        
+
         if (!empty($response)) {
             $content = $response->getBody()->getContents();
             return $content;
