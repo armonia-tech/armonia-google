@@ -18,10 +18,10 @@
         }
     ],
     "require": {
-        "google/apiclient": "^2.0",
-        "google/cloud-storage": "^1.11",
-        "google/cloud-pubsub": "^1.13",
-        "google/cloud-tasks": "^1.8"
+        "google/apiclient": "^2.4",
+        "google/cloud-storage": "~1.14",
+        "google/cloud-pubsub": "~1.13",
+        "google/cloud-tasks": "~1.8"
     },
     "minimum-stability": "stable",
     "require-dev": {
