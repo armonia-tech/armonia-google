@@ -187,4 +187,26 @@ class CloudStorage
 
         return true;
     }
+
+    /**
+     * delete file from Cloud Storage
+     *
+     * @author Armonia Tech <developer@armonia-tech.com>
+     * @param string $bucke_name bucket name
+     * @param string $file_directory file path in the bucket exclude the bucket name
+     * @return bool true
+     */
+    public static function deleteFromCloud(string $file_url, string $bucket_name = '')
+    {
+        if (empty($bucket_name)) $bucket_name = self::getStorageBucket();
+
+        $storage = new StorageClient([
+            'keyFile' => json_decode(file_get_contents(self::getStorageKey()), true)
+        ]);
+
+        $bucket = $storage->bucket($bucket_name);
+        $object = $bucket->object($file_url);
+        $object->delete();
+        return true;
+    }
 }
